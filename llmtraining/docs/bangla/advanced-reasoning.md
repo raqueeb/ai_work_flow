@@ -1,38 +1,142 @@
-# উন্নত রিজনিং (Advanced Reasoning)
+# Advanced Reasoning (Bangla)
 
-এই গাইডটি দেখায় কীভাবে লোকাল LLM (Gemma 4 E4B) ব্যবহার করে **চেইন‑অফ‑থট (CoT)** পদ্ধতিতে জটিল ISP টিকিট বিশ্লেষণ করা যায়। CoT মডেলকে ধাপ‑ধাপে যুক্তি প্রকাশ করতে বলে, ফলে ফলাফল আরও বিশ্বাসযোগ্য ও ব্যাখ্যাযোগ্য হয়।
+Advanced reasoning দেখায় কিভাবে একটি local LLM multi-step, chain-of-thought (CoT) analysis ব্যবহার করে complex ISP tickets সমাধান করে। এই section-এর demos গুলো **Gemma 4 E4B** model ব্যবহার করে, যা problems-কে logical steps-এ ভাগ করতে এবং transparent justifications দিতে পারদর্শী।
 
-## CoT কী?
+## Chain-of-Thought কি?
 
-- **ধাপ‑ধাপে ব্যাখ্যা** – মডেল প্রথমে সমস্যার বিশ্লেষণ, তারপর সমাধান প্রস্তাব করে, শেষে চূড়ান্ত ISP কোড দেয়।  
-- **স্বচ্ছতা** – ব্যবহারকারী দেখতে পারে মডেল কীভাবে সিদ্ধান্তে পৌঁছেছে।  
-- **সঠিকতা বৃদ্ধি** – জটিল বা বহু‑সিম্পটম টিকিটে ভুলের হার কমে।
+Chain-of-Thought হলো একটি prompting technique যেখানে model-কে final answer দেওয়ার আগে *তার reasoning explain* করতে বলা হয়। এটা output-কে বেশি trustworthy করে এবং developers-দের দেখতে দেয় কিভাবে model একটা decision-এ এসেছে।
 
-## ডেমো
+## Reasoning Flow
 
-| ডেমো | বর্ণনা | চালানোর পদ্ধতি |
-|------|--------|----------------|
-| `gemma-4-e4b-app-reasoning2.py` | CoT ডেমো – মডেল ধাপ‑ধাপে ব্যাখ্যা করে। | `python gemma-4-e4b-app-reasoning2.py` |
-
-## ডেমো চালানোর ধাপ
-
-1. **LM Studio**-এ Gemma 4 E4B লোড করুন।  
-2. টার্মিনালে `cd c:\Downloads\classifier-app` লিখে প্রকল্প ফোল্ডারে যান।  
-3. উপরের **চালানোর পদ্ধতি** কলাম থেকে কমান্ড চালান।  
-4. আউটপুটে মডেল প্রথমে বিশ্লেষণ ধাপ, তারপর চূড়ান্ত ISP কোড দেখাবে।
-
-## উদাহরণ আউটপুট
-
-```
-ধাপ ১: সমস্যার বিশ্লেষণ – রেড লাইট, সিগন্যাল লস, এবং প্যাকেট লস রিপোর্ট হয়েছে।
-ধাপ ২: সম্ভাব্য কারণ – ফাইবার কাট বা ONT ত্রুটি।
-ধাপ ৩: সুপারিশ – ফিল্ড টিমকে ডিপ্লয় করুন, রেড লাইট রিসেট করুন।
-ফাইনাল কোড: ISP‑001 (রেড লাইট / ফিজিক্যাল ফাইবার কাট)
+```mermaid
+flowchart TD
+    A[Customer Complaint] --> B[Extract Key Symptoms]
+    B --> C[Identify Potential Causes]
+    C --> D[Check Field Conditions]
+    D --> E{Match ISP Code?}
+    E -->|Yes| F[Return ISP Code]
+    E -->|No| G[Apply LLM Analysis]
+    G --> H[Step-by-Step Reasoning]
+    H --> I[Generate Explanation]
+    I --> J[Final ISP Code + Justification]
+    
+    style A fill:#e1f5fe
+    style F fill:#c8e6c9
+    style J fill:#fff3e0
 ```
 
-## কাস্টমাইজেশন
+## Multi-Stage Analysis
 
-- **প্রম্পট পরিবর্তন** – `gemma-4-e4b-model_use_class.py`-এ সিস্টেম প্রম্পট পরিবর্তন করে ধাপের সংখ্যা বা বিশদতা বাড়াতে পারেন।  
-- **কীওয়ার্ড রুল** – `gemma-4-e4b-app-baseline-class.py`-এর `FIELD_ISP_CODES` ডিকশনারি আপডেট করে নতুন রুল যোগ করুন।  
+```mermaid
+flowchart LR
+    subgraph Input
+        A[Complaint Text]
+    end
+    
+    subgraph Analysis
+        B[Symptom Detection] --> C[Pattern Matching]
+        C --> D[Context Evaluation]
+    end
+    
+    subgraph Reasoning
+        E[Cause Analysis] --> F[Rule Application]
+        F --> G[LLM Validation]
+    end
+    
+    subgraph Output
+        H[ISP Code] --> I[Confidence Score]
+        I --> J[Explanation]
+    end
+    
+    A --> B
+    C --> D
+    D --> E
+    G --> H
+```
 
-*CoT ব্যবহার করে জটিল টিকিটের জন্য আরও সঠিক ও ব্যাখ্যামূলক ফলাফল পান।*
+## Demo Overview
+
+| Demo | Description | How to Run |
+|------|-------------|------------|
+| `gemma-4-e4b-app-reasoning2.py` | CoT demo যা ISP code দেওয়ার আগে model-কে intermediate steps list করতে বলে। | `python gemma-4-e4b-app-reasoning2.py` |
+
+## Chain-of-Thought কিভাবে কাজ করে
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant S as System
+    participant L as LLM
+    
+    U->>S: Customer complaint
+    S->>S: Extract symptoms
+    S->>L: Prompt with reasoning request
+    L-->>S: Step 1: Symptom analysis
+    L-->>S: Step 2: Possible causes
+    L-->>S: Step 3: Recommendation
+    L-->>S: Final: ISP Code + explanation
+    S-->>U: Structured response
+```
+
+## Example Output
+
+```
+Input: "Customer reports red light on ONT, no internet for 2 hours"
+
+Reasoning Steps:
+1. Symptom Analysis: Red light + no internet indicates hardware/power issue
+2. Possible Causes: ONT failure, fiber cut, power outage
+3. Field Check: Red light specifically indicates fiber or hardware problem
+4. Conclusion: Based on red light pattern, this is ISP-001
+
+Final Code: ISP-001 (ONT / Red Light / Physical Fiber Issue)
+Confidence: 94%
+```
+
+## Code Structure
+
+```mermaid
+graph TD
+    A[gemma-4-e4b-app-reasoning2.py] --> B[System Prompt]
+    A --> C[User Complaint]
+    B --> D[LLM Processing]
+    C --> D
+    D --> E[Reasoning Steps]
+    E --> F[Final ISP Code]
+    E --> G[Explanation]
+    
+    style A fill:#f3e5f5
+    style F fill:#c8e6c9
+    style G fill:#e3f2fd
+```
+
+## When to Use Advanced Reasoning
+
+| Scenario | Use Basic | Use Advanced Reasoning |
+|----------|-----------|------------------------|
+| Clear, single-issue complaints | Yes | Yes |
+| Multiple symptoms present | No | Yes |
+| Ambiguous language | No | Yes |
+| Requires justification | No | Yes |
+| Regulatory audit trail needed | No | Yes |
+
+## Running the Demo
+
+```bash
+# Ensure LM Studio is running with Gemma 4 E4B loaded
+python gemma-4-e4b-app-reasoning2.py
+```
+
+Script টি:
+1. Customer complaint load করবে
+2. Chain-of-thought instructions দিয়ে model-কে prompt করবে
+3. Intermediate reasoning steps display করবে
+4. Explanation সহ final ISP code return করবে
+
+## Customization
+
+- **Reasoning depth adjust করুন**: System prompt modify করুন যাতে more বা fewer steps request করা যায়
+- **Domain rules add করুন**: Baseline classifier-এর `FIELD_ISP_CODES` dictionary update করুন
+- **Confidence thresholds tune করুন**: আপনার accuracy requirements অনুযায়ী adjust করুন
+
+*Chain-of-thought reasoning complex ISP ticket classification-এর জন্য transparency এবং accuracy provide করে।*

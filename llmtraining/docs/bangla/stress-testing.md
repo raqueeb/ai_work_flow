@@ -1,74 +1,207 @@
-# স্ট্রেস টেস্টিং (Gemma 4 E4B)
+# Stress Testing (Bangla)
 
-এই পৃষ্ঠায় Qwen ভার্সনের মিরর, কিন্তু **Gemma 4 E4B** মডেল ব্যবহার করে। এটি দেখায় বড় মডেলটি একই ২০০‑টিকিট স্যুট কিভাবে হ্যান্ডেল করে, সঠিকতা, কনফিডেন্স এবং লেটেন্সিতে পার্থক্য তুলে ধরে।
+Stress testing evaluate করে LLM কিভাবে load-এর under perform করে, response times, throughput, এবং quality measure করে বিভিন্ন scenarios-এ। এই section **Gemma 4 E4B** model দিয়ে stress testing demonstrate করে।
 
-## কেন তুলনা করবেন?
+## Test Workflow
 
-| মেট্রিক | Qwen 2.5‑1.5B | Gemma 4 E4B |
-|--------|---------------|------------|
-| সঠিকতা | ~93% | ~97% |
-| গড় লেটেন্সি | 45 ms | 80 ms |
-| কনফিডেন্স | 88% | 94% |
-| মেমরি ব্যবহার | ~2 GB VRAM | ~6 GB VRAM |
+```mermaid
+flowchart TD
+    A[Test Cases] --> B[Test Runner]
+    B --> C[Sequential Mode]
+    B --> D[Parallel Mode]
+    C --> E[Measure Latency]
+    D --> E
+    E --> F[Collect Results]
+    F --> G[Generate Report]
+    
+    style A fill:#e3f2fd
+    style G fill:#c8e6c9
+```
 
-Gemma‑এর গভীর রিজনিং অ্যাম্বিগুয়াস টিকিট বা একাধিক লক্ষণসহ টিকিটের ভুল ক্লাসিফিকেশন কমায়।
+## Test Execution Flow
 
-## টেস্ট স্যুট ওভারভিউ
+```mermaid
+flowchart LR
+    subgraph Setup
+        A[Load Test Cases] --> B[Configure Runner]
+    end
+    
+    subgraph Execution
+        B --> C[Call LLM API]
+        C --> D{Success?}
+        D -->|Yes| E[Record Response]
+        D -->|No| F[Log Error]
+        E --> G{Next Case?}
+        F --> G
+        G -->|Yes| C
+        G -->|No| H[Complete]
+    end
+    
+    subgraph Results
+        H --> I[Calculate Stats]
+        I --> J[Generate Report]
+    end
+    
+    style J fill:#c8e6c9
+```
 
-স্ক্রিপ্ট `gemma-4-e4b-llm_stress_test_class.py` একই ২০০টি সিন্থেটিক টিকিট চালায়:
+## Performance Metrics
 
-- স্পষ্ট, এক‑বাক্যের অভিযোগ।
-- সমার্থক শব্দসহ বহু‑বাক্যের বর্ণনা।
-- মিশ্র‑ভাষা (English + Bangla) টিকিট।
-- নয়েজি ইনপুট (টাইপোস, র‍্যান্ডম সিম্বল)।
+```mermaid
+graph TD
+    A[Stress Test Results] --> B[Response Time]
+    A --> C[Throughput]
+    A --> D[Error Rate]
+    A --> E[Quality Score]
+    
+    B --> F[Min/Avg/Max]
+    C --> G[Requests/sec]
+    D --> H[Success vs Fail]
+    E --> I[Accuracy Check]
+    
+    style F fill:#e8eaf6
+    style G fill:#e8eaf6
+    style H fill:#e8eaf6
+    style I fill:#e8eaf6
+```
 
-স্ক্রিপ্ট প্রতিটি টিকিটের জন্য রেকর্ড করে:
-- প্রেডিক্টেড ISP কোড।
-- কনফিডেন্স স্কোর।
-- ইনফারেন্স টাইম।
+## Test Case Structure
 
-ফলাফল `stress_test_results_gemma.csv`‑তে সেভ হয়।
+| Test Type | Cases | Purpose |
+|-----------|-------|---------|
+| Mini Demo | 5 | Quick validation |
+| Small Demo | 10 | Basic functionality |
+| Standard Test | 55 | Comprehensive evaluation |
+| Stress Test | 100+ | Performance limits |
 
-## স্ট্রেস টেস্ট চালানো
+## Sequential vs Parallel
+
+```mermaid
+flowchart LR
+    subgraph Sequential
+        A[T1] --> B[T2] --> C[T3] --> D[T4]
+        style A fill:#e3f2fd
+        style D fill:#c8e6c9
+    end
+    
+    subgraph Parallel
+        E[T1] --> H[All at Once]
+        F[T2] --> H
+        G[T3] --> H
+        G[T4] --> H
+        style E fill:#e3f2fd
+        style H fill:#c8e6c9
+    end
+```
+
+## Test Reports
+
+```mermaid
+sequenceDiagram
+    participant T as Test Runner
+    participant L as LLM API
+    participant R as Report Generator
+    
+    loop For each case
+        T->>L: Send request
+        L-->>T: Response + time
+        T->>T: Record metrics
+    end
+    
+    T->>R: Generate report
+    R-->>T: Report complete
+```
+
+## Demo Scripts
+
+| Script | Cases | Description |
+|--------|-------|-------------|
+| `llm_mini_demo_5cases.py` | 5 | Quick sanity check |
+| `llm_demo_small_10case.py` | 10 | Standard validation |
+| `llm_hierarchical_demo.py` | 15 | Multi-level testing |
+| `gemma-4-e4b-llm_stress_test_class.py` | 55+ | Full stress test |
+
+## Running Tests
 
 ```bash
-# নিশ্চিত করুন LM Studio Gemma 4 E4B লোড করা আছে
-# প্রয়োজনে ডিপেন্ডেন্সি ইনস্টল করুন
-pip install pandas
+# Quick validation (5 cases)
+python llm_mini_demo_5cases.py
 
-# টেস্ট চালান
+# Standard test (10 cases)
+python llm_demo_small_10case.py
+
+# Full stress test (55+ cases)
 python gemma-4-e4b-llm_stress_test_class.py
 ```
 
-স্ক্রিপ্ট একটি সারাংশ প্রিন্ট করে:
+## Expected Output
 
 ```
-Total tickets: 200
-Correct predictions: 194 (97%)
-Average latency: 80 ms
+Test Run: 55 cases
+Mode: Sequential
+Model: Gemma 4 E4B
+
+Results:
+- Total Time: 45.2s
+- Avg Response: 0.82s
+- Min/Max: 0.3s / 2.1s
+- Errors: 0
+- Success Rate: 100%
+
+Quality Metrics:
+- Classification Accuracy: 91%
+- Reasoning Correctness: 88%
 ```
 
-ভুল ক্লাসিফিকেশন বিশ্লেষণ করতে CSV ফাইল খুলুন।
+## Performance Thresholds
 
-## ফলাফল ব্যাখ্যা
+| Metric | Target | Critical |
+|--------|--------|----------|
+| Avg Response Time | <1s | >2s |
+| Max Response Time | <3s | >5s |
+| Error Rate | <1% | >5% |
+| Throughput | >10 req/s | <5 req/s |
 
-| মেট্রিক | এর অর্থ |
-|--------|--------|
-| **সঠিকতা** | টিকিটের শতাংশ যেখানে `predicted_code == expected_code`। |
-| **কনফিডেন্স** | সঠিক প্রেডিকশনের গড় কনফিডেন্স স্কোর। |
-| **লেটেন্সি** | প্রতি ইনফারেন্সে নেওয়া সময়; স্কেলিং সিদ্ধান্তের জন্য উপযোগী। |
-| **এরর এনালাইসিস** | মডেল যেখানে ব্যর্থ হয়েছে সারি দেখুন; টিকিটটি অস্পষ্ট ছিল কি না টাইপোস ছিল তা চেক করুন। |
+## Test Configuration
 
-## টেস্ট এক্সটেন্ড করা
+```mermaid
+graph TD
+    A[Test Config] --> B[Model Settings]
+    A --> C[API Endpoint]
+    A --> D[Test Cases]
+    A --> E[Thresholds]
+    
+    B --> F[Temp, Top-P, Max Tokens]
+    C --> G[Port, Timeout]
+    D --> H[Cases JSON]
+    E --> I[Pass/Fail Criteria]
+    
+    style I fill:#c8e6c9
+```
 
-- **আরও টিকিট যোগ** – `test_cases.json` ফাইলে যোগ করুন।
-- **Qwen‑এ চালান** – তুলনা করতে Qwen স্ক্রিপ্ট ব্যবহার করুন।
-- **প্যারালাল এক্সিকিউশন** – থ্রুপুট টেস্টের জন্য `concurrent.futures` ব্যবহার করুন।
+## Interpreting Results
 
-## পরবর্তী ধাপ
+- **Low avg time, high max time**: Occasional slow responses (normal)
+- **High error rate**: Check API connectivity and model health
+- **Quality drops under load**: Consider model upgrade or optimization
 
-- **মডেল তুলনা** গাইডে Qwen এবং Gemma ফলাফল তুলনা করুন।
-- ফলাফল ব্যবহার করে প্রম্পট পরিবর্তন করুন বা নতুন কীওয়ার্ড রুল যোগ করুন।
-- মডেল আপডেটের সময় রিগ্রেশন ধরতে টেস্টটি CI পাইপলাইনে ইন্টিগ্রেট করুন।
+*Stress testing ensure করে আপনার LLM deployment expected workloads reliably handle করতে পারে।*
 
-*আপনার মডেল রোবাস্ট এবং টিকিট সঠিক রাখুন!*
+## Best Practices
+
+1. Tests off-peak hours-এ run করুন
+2. Representative test cases use করুন
+3. System resources monitor করুন (CPU, RAM)
+4. Results model versions জুড়ে compare করুন
+5. Performance over time track এবং document করুন
+
+## Automation
+
+Consistent performance ensure করতে regular stress tests schedule করুন:
+
+```bash
+# Add to cron/scheduler
+0 */6 * * * python llm_stress_test_class.py >> /var/log/llm-stress.log
+```
+
+এটা users-কে impact করার আগে performance degradation catch করতে সাহায্য করে।

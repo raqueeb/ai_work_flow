@@ -1,62 +1,93 @@
-# Getting Started (Legacy)
+# Getting Started
 
-> **Note:** This guide covers the original setup using the Qwen 2.5‑1.5B model. For a more structured learning path, see [Getting Started with Qwen 2.5](getting-started-qwen.md) and [Upgrading to Gemma 4 E4B](upgrading-to-gemma.md).
-
-This page provides a quick‑start for running the original demos that shipped with the repository.
+This guide walks you through setting up your first local LLM application. By the end, you will have a working AI system that runs entirely on your machine.
 
 ## Prerequisites
 
-- **Python 3.11+** – Ensure `python` is in your `PATH`.  
-- **Git** – To clone the repository (optional if you already have the files).  
-- **LM Studio** – Download from https://lmstudio.ai/ and install.
+- Python 3.10 or higher
+- LM Studio installed
+- A model downloaded (Qwen 2.5 1.5B recommended for beginners)
 
-## Installation
+## Setup Flow
+
+```mermaid
+flowchart TD
+    A[Download LM Studio] --> B[Install LM Studio]
+    B --> C[Download Qwen 2.5 1.5B]
+    C --> D[Start Local Server]
+    D --> E[Configure Port 1234]
+    E --> F[Run First Script]
+    F --> G[Verify Response]
+```
+
+## Step 1: Install LM Studio
+
+Download and install LM Studio from [https://lmstudio.ai](https://lmstudio.ai)
+
+## Step 2: Download a Model
+
+```mermaid
+flowchart LR
+    A[Open LM Studio] --> B[Search Qwen 2.5]
+    B --> C[Download 1.5B Version]
+    C --> D[Wait for Download]
+    D --> E[Model Ready]
+```
+
+1. Open LM Studio
+2. Click on the search bar
+3. Search for "Qwen2.5 1.5B"
+4. Download the Q4_K_M version (smaller, faster)
+5. Wait for download to complete
+
+## Step 3: Start the Server
+
+1. Click "Local Server" tab in LM Studio
+2. Select "Qwen 2.5 1.5B" model
+3. Click "Start Server"
+4. Server runs at `http://localhost:1234`
+
+## Step 4: Run Your First Script
 
 ```bash
-# Clone the repository (skip if you already have the folder)
-git clone https://github.com/raqueeb/link3_ai_cases.git
-cd classifier-app
-
-# Install Python dependencies
-pip install streamlit requests playwright
+cd getting-started
+python talk_to_llm.py
 ```
 
-## Setting Up LM Studio
+### What the Script Does
 
-1. **Download and Install LM Studio** – Follow the installer prompts.  
-2. **Launch LM Studio** – Open the application.  
-3. **Search for Qwen2.5‑1.5B** – Click the “Discover” icon, type `Qwen2.5-1.5B-Instruct`, and download the GGUF version (Q4_K_M recommended).  
-4. **Load the Model** – Go to the “Models” tab, select the model, and click **Load**.  
-5. **Start the Server** – LM Studio will start a local server at `http://localhost:1234/v1`.
-
-## Running Your First Demo
-
-```bash
-# Quick demo (original Qwen version)
-python app-reasoning2.py
+```mermaid
+sequenceDiagram
+    participant User
+    participant Script as talk_to_llm.py
+    participant LMStudio as LM Studio
+    
+    User->>Script: Run script
+    Script->>LMStudio: POST request
+    Note over Script: System prompt + user query
+    LMStudio->>Script: Response JSON
+    Script->>User: Display result
 ```
 
-You should see output similar to:
+## Step 5: Verify Everything Works
 
+Expected output:
 ```
-======================================================================
- QWEN2.5-1.5B LLM QUICK DEMO
-======================================================================
-...
-```
-
-## Running a Streamlit App
-
-```bash
-streamlit run app-baseline-class.py
+Response: This is a response from the local LLM...
+Model: qwen2.5-1.5b-instruct
 ```
 
-This opens a browser at `http://localhost:8501` with an interactive ticket classifier.
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Connection refused | Ensure LM Studio server is running |
+| Model not found | Download model in LM Studio |
+| Slow response | Try a smaller model or reduce max_tokens |
+| Empty response | Check system prompt formatting |
 
 ## Next Steps
 
-- Explore the **Qwen Demos** page for a list of all original demos.  
-- Upgrade to **Gemma 4 E4B** for better reasoning (see the [Upgrading to Gemma 4 E4B](upgrading-to-gemma.md) guide).  
-- Check the **Model Comparison** page to decide which model fits your use‑case.
-
-*This legacy guide is kept for reference; the new learning path is recommended for beginners.*
+- [Getting Started with Qwen 2.5](getting-started-qwen.md) - More advanced usage
+- [ISP Classification](isp-classification-qwen.md) - Your first real application
+- [RAG with Qwen](rag-qwen.md) - Add knowledge base capabilities

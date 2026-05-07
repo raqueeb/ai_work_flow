@@ -1,74 +1,207 @@
-# Stress Testing (Gemma 4 E4B)
+# Stress Testing
 
-The stress‑testing page mirrors the Qwen version but uses the **Gemma 4 E4B** model. It demonstrates how the larger model handles the same 200‑ticket suite, highlighting differences in accuracy, confidence, and latency.
+Stress testing evaluates how the LLM performs under load, measuring response times, throughput, and quality across different scenarios. This section demonstrates stress testing with the **Gemma 4 E4B** model.
 
-## Why Compare?
+## Test Workflow
 
-| Metric | Qwen 2.5‑1.5B | Gemma 4 E4B |
-|--------|---------------|------------|
-| Accuracy | ~93% | ~97% |
-| Average Latency | 45 ms | 80 ms |
-| Confidence | 88% | 94% |
-| Memory Usage | ~2 GB VRAM | ~6 GB VRAM |
+```mermaid
+flowchart TD
+    A[Test Cases] --> B[Test Runner]
+    B --> C[Sequential Mode]
+    B --> D[Parallel Mode]
+    C --> E[Measure Latency]
+    D --> E
+    E --> F[Collect Results]
+    F --> G[Generate Report]
+    
+    style A fill:#e3f2fd
+    style G fill:#c8e6c9
+```
 
-Gemma’s deeper reasoning reduces misclassifications, especially for tickets with ambiguous language or multiple symptoms.
+## Test Execution Flow
 
-## Test Suite Overview
+```mermaid
+flowchart LR
+    subgraph Setup
+        A[Load Test Cases] --> B[Configure Runner]
+    end
+    
+    subgraph Execution
+        B --> C[Call LLM API]
+        C --> D{Success?}
+        D -->|Yes| E[Record Response]
+        D -->|No| F[Log Error]
+        E --> G{Next Case?}
+        F --> G
+        G -->|Yes| C
+        G -->|No| H[Complete]
+    end
+    
+    subgraph Results
+        H --> I[Calculate Stats]
+        I --> J[Generate Report]
+    end
+    
+    style J fill:#c8e6c9
+```
 
-The script `gemma-4-e4b-llm_stress_test_class.py` runs the same 200 synthetic tickets:
+## Performance Metrics
 
-- Clear, single‑sentence complaints.
-- Multi‑sentence narratives with synonyms.
-- Mixed‑language (English + Bangla) tickets.
-- Noisy input (typos, random symbols).
+```mermaid
+graph TD
+    A[Stress Test Results] --> B[Response Time]
+    A --> C[Throughput]
+    A --> D[Error Rate]
+    A --> E[Quality Score]
+    
+    B --> F[Min/Avg/Max]
+    C --> G[Requests/sec]
+    D --> H[Success vs Fail]
+    E --> I[Accuracy Check]
+    
+    style F fill:#e8eaf6
+    style G fill:#e8eaf6
+    style H fill:#e8eaf6
+    style I fill:#e8eaf6
+```
 
-The script records for each ticket:
-- Predicted ISP code.
-- Confidence score.
-- Inference time.
+## Test Case Structure
 
-Results are saved to `stress_test_results_gemma.csv`.
+| Test Type | Cases | Purpose |
+|-----------|-------|---------|
+| Mini Demo | 5 | Quick validation |
+| Small Demo | 10 | Basic functionality |
+| Standard Test | 55 | Comprehensive evaluation |
+| Stress Test | 100+ | Performance limits |
 
-## Running the Stress Test
+## Sequential vs Parallel
+
+```mermaid
+flowchart LR
+    subgraph Sequential
+        A[T1] --> B[T2] --> C[T3] --> D[T4]
+        style A fill:#e3f2fd
+        style D fill:#c8e6c9
+    end
+    
+    subgraph Parallel
+        E[T1] --> H[All at Once]
+        F[T2] --> H
+        G[T3] --> H
+        G[T4] --> H
+        style E fill:#e3f2fd
+        style H fill:#c8e6c9
+    end
+```
+
+## Test Reports
+
+```mermaid
+sequenceDiagram
+    participant T as Test Runner
+    participant L as LLM API
+    participant R as Report Generator
+    
+    loop For each case
+        T->>L: Send request
+        L-->>T: Response + time
+        T->>T: Record metrics
+    end
+    
+    T->>R: Generate report
+    R-->>T: Report complete
+```
+
+## Demo Scripts
+
+| Script | Cases | Description |
+|--------|-------|-------------|
+| `llm_mini_demo_5cases.py` | 5 | Quick sanity check |
+| `llm_demo_small_10case.py` | 10 | Standard validation |
+| `llm_hierarchical_demo.py` | 15 | Multi-level testing |
+| `gemma-4-e4b-llm_stress_test_class.py` | 55+ | Full stress test |
+
+## Running Tests
 
 ```bash
-# Ensure LM Studio is running with Gemma 4 E4B loaded
-# Install dependencies if needed
-pip install pandas
+# Quick validation (5 cases)
+python llm_mini_demo_5cases.py
 
-# Run the test
+# Standard test (10 cases)
+python llm_demo_small_10case.py
+
+# Full stress test (55+ cases)
 python gemma-4-e4b-llm_stress_test_class.py
 ```
 
-The script prints a summary:
+## Expected Output
 
 ```
-Total tickets: 200
-Correct predictions: 194 (97%)
-Average latency: 80 ms
+Test Run: 55 cases
+Mode: Sequential
+Model: Gemma 4 E4B
+
+Results:
+- Total Time: 45.2s
+- Avg Response: 0.82s
+- Min/Max: 0.3s / 2.1s
+- Errors: 0
+- Success Rate: 100%
+
+Quality Metrics:
+- Classification Accuracy: 91%
+- Reasoning Correctness: 88%
 ```
 
-Open the CSV file to analyze misclassifications.
+## Performance Thresholds
+
+| Metric | Target | Critical |
+|--------|--------|----------|
+| Avg Response Time | <1s | >2s |
+| Max Response Time | <3s | >5s |
+| Error Rate | <1% | >5% |
+| Throughput | >10 req/s | <5 req/s |
+
+## Test Configuration
+
+```mermaid
+graph TD
+    A[Test Config] --> B[Model Settings]
+    A --> C[API Endpoint]
+    A --> D[Test Cases]
+    A --> E[Thresholds]
+    
+    B --> F[Temp, Top-P, Max Tokens]
+    C --> G[Port, Timeout]
+    D --> H[Cases JSON]
+    E --> I[Pass/Fail Criteria]
+    
+    style I fill:#c8e6c9
+```
 
 ## Interpreting Results
 
-| Metric | What it Means |
-|--------|---------------|
-| **Accuracy** | Percentage of tickets where `predicted_code == expected_code`. |
-| **Confidence** | Average confidence score for correct predictions. |
-| **Latency** | Time taken per inference; useful for scaling decisions. |
-| **Error Analysis** | Look at rows where the model failed; check if the ticket was ambiguous or had typos. |
+- **Low avg time, high max time**: Occasional slow responses (normal)
+- **High error rate**: Check API connectivity and model health
+- **Quality drops under load**: Consider model upgrade or optimization
 
-## Extending the Test
+*Stress testing ensures your LLM deployment can handle expected workloads reliably.*
 
-- **Add More Tickets** – Append to the `test_cases.json` file.
-- **Run on Qwen** – Use the Qwen script to compare side‑by‑side.
-- **Parallel Execution** – Use `concurrent.futures` to run multiple inferences concurrently for throughput testing.
+## Best Practices
 
-## Next Steps
+1. Run tests during off-peak hours
+2. Use representative test cases
+3. Monitor system resources (CPU, RAM)
+4. Compare results across model versions
+5. Document and track performance over time
 
-- Compare the Qwen and Gemma results in the **Model Comparison** guide.
-- Use the findings to refine prompts or add new keyword rules.
-- Integrate the test into a CI pipeline to catch regressions when updating the model.
+## Automation
 
-*Keep your models robust and your tickets accurate!*
+Schedule regular stress tests to ensure consistent performance:
+
+```bash
+# Add to cron/scheduler
+0 */6 * * * python llm_stress_test_class.py >> /var/log/llm-stress.log
+```
+
+This helps catch performance degradation before it impacts users.

@@ -1,207 +1,188 @@
-# MLOps গ্রাহক চুরি পূর্বাভাস
+# MLOps গ্রাহক চুরি পূর্বাভাস (Bangla)
 
-> গ্রাহক ধরে রাখার জন্য উৎপাদন-প্রস্তুত ML পাইপলাইন নির্মাণ
+এই section টি customer churn prediction-এর জন্য end-to-end MLOps pipeline cover করে - data ingestion থেকে model deployment এবং monitoring পর্যন্ত। Implementation টি reasoning tasks-এর জন্য **Gemma 4 E4B** দিয়ে local LLM inference ব্যবহার করে।
 
-**লেখক:** রাকিবুল হাসান  
-**প্রতিষ্ঠান:** লিংক3 টেকনোলজিস  
-**তারিখ:** জানুয়ারি ২০২৫
+## MLOps Pipeline Overview
 
----
-
-## সংক্ষিপ্ত বিবরণ
-
-এই মডিউলটি **মেশিন লার্নিং অপারেশনস (MLOps)** অনুশীলনগুলি প্রদর্শন করে যা একটি ISP পরিবেশে গ্রাহক চুরি (churn) পূর্বাভাসের জন্য বিশেষভাবে ডিজাইন করা হয়েছে। স্থানীয় LLMs (Qwen 2.5 1.5B এবং Gemma 4 E4B) দিয়ে তৈরি, এটি একটি সম্পূর্ণ উৎপাদন-প্রস্তুত পাইপলাইন প্রদান করে যা সম্পূর্ণরূপে প্রাঙ্গনে মোতায়েন করা যায়।
-
-## গ্রাহক চুরি পূর্বাভাসে MLOps কেন?
-
-### চ্যালেঞ্জ
-
-- গ্রাহক চুরি ISPs-কে উল্লেখযোগ্য রাজস্ব খরচ করায়
-- ঐতিহ্যবাহী নিয়ম-ভিত্তিক সিস্টেম সূক্ষ্ম প্যাটার্ন মিস করে
-- পূর্বাভাস নির্ভুলতা ক্রমাগত উন্নত করতে হবে
-- মডেল স্বচ্ছতার জন্য নিয়ন্ত্রক প্রয়োজনীয়তা
-
-### MLOps সমাধান
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   MLOps পাইপলাইন প্রবাহ                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   ডেটা → ফিচার → ট্রেন → মূল্যায়ন → রেজিস্টার → মোতায়েন   │
-│                                          ↓                   │
-│                              মনিটর → ড্রিফট সনাক্ত          │
-│                                          ↓                   │
-│                                    রিট্রেন লুপ               │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A[Data Ingestion] --> B[Data Validation]
+    B --> C[Feature Engineering]
+    C --> D[Model Training]
+    D --> E[Model Evaluation]
+    E --> F{Performance OK?}
+    F -->|Yes| G[Model Registry]
+    F -->|No| D
+    G --> H[Model Deployment]
+    H --> I[Monitoring]
+    I --> J[Drift Detection]
+    J --> K{Drift Detected?}
+    K -->|Yes| L[Auto-Retrain Trigger]
+    K -->|No| I
+    L --> D
+    
+    style A fill:#e3f2fd
+    style G fill:#c8e6c9
+    style L fill:#ffccbc
 ```
 
-## উপাদান
+## Training Pipeline
 
-### ১. চুরি পাইপলাইন (`churn_pipeline.py`)
-
-端到端 মেশিন লার্নিং পাইপলাইন:
-
-| ধাপ | বিবরণ |
-|-----|-------|
-| **ডেটা গ্রহণ** | গ্রাহক ডেটা সংগ্রহ ও যাচাই |
-| **ফিচার ইঞ্জিনিয়ারিং** | অভিযোগ, টিকেট, বিলিং থেকে ভবিষ্যদ্বাণীমূলক ফিচার বের করা |
-| **LLM পূর্বাভাস** | গ্রাহক চুরি ঝুঁকি মূল্যায়নের জন্য স্থানীয় LLM ব্যবহার |
-| **মডেল মূল্যায়ন** | নির্ভুলতা, প্রিসিশন, রিকল গণনা |
-
-### ২. মডেল রেজিস্ট্রি (`model_registry.py`)
-
-মডেল ভার্সন ট্র্যাক ও ম্যানেজ:
-
-- সমস্ত মডেল পুনরাবৃত্তির জন্য ভার্সন কন্ট্রোল
-- পারফরম্যান্স মেট্রিক্স সংরক্ষণ
-- মোতায়েন ইতিহাস ট্র্যাকিং
-- রোলব্যাক সক্ষমতা
-
-### ৩. পারফরম্যান্স মনিটর (`monitor.py`)
-
-রিয়েল-টাইম পর্যবেক্ষণ:
-
-- ল্যাটেন্সি ট্র্যাকিং (p50, p95, p99)
-- ত্রুটি হার পর্যবেক্ষণ
-- স্বয়ংক্রিয় সতর্কতাসহ স্বাস্থ্য পরীক্ষা
-- পূর্বাভাস লগিং
-
-### ৪. A/B টেস্টার (`ab_tester.py`)
-
-ডেটা-চালিত মডেল তুলনা:
-
-- মডেল ভেরিয়েন্টের মধ্যে ট্রাফিক স্প্লিটিং
-- পরিসংখ্যানগত তাৎপর্য পরীক্ষা
-- বিজয়ী নির্ধারণ ও প্রচার
-- পরীক্ষা ট্র্যাকিং
-
-### ৫. রিট্রেন ট্রিগার (`retrain_trigger.py`)
-
-স্বয়ংক্রিয় রক্ষণাবেক্ষণ:
-
-- পারফরম্যান্স ড্রিফট সনাক্তকরণ
-- ল্যাটেন্সি অবনতি পর্যবেক্ষণ
-- ত্রুটি হার স্পাইক সতর্কতা
-- নির্ধারিত পুনঃপ্রশিক্ষণ
-
-## দ্রুত শুরু
-
-```python
-from mlops import ChurnPipeline, ModelRegistry, PerformanceMonitor
-
-# পাইপলাইন চালু করুন
-pipeline = ChurnPipeline()
-
-# পূর্বাভাস চালান
-customer = {
-    'customer_id': 'CUST-001',
-    'complaints': [...],
-    'billing_history': {...},
-    'support_tickets': [...]
-}
-
-result = pipeline.run_pipeline(customer)
-print(f"ঝুঁকি স্তর: {result['prediction']['risk_level']}")
+```mermaid
+flowchart LR
+    subgraph Data
+        A[Raw Data] --> B[Clean]
+        B --> C[Transform]
+    end
+    
+    subgraph Features
+        C --> D[Feature Selection]
+        D --> E[Scaling]
+    end
+    
+    subgraph Model
+        E --> F[Train]
+        F --> G[Validate]
+        G --> H[Save Model]
+    end
+    
+    style H fill:#c8e6c9
 ```
 
-## আর্কিটেকচার ডায়াগ্রাম
+## Monitoring Dashboard
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                     MLOps চুরি পূর্বাভাস সিস্টেম                   │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────────────┐  │
-│  │ গ্রাহক      │───▶│ ফিচার       │───▶│ LLM পূর্বাভাস        │  │
-│  │ ডেটা        │    │ ইঞ্জিনিয়ারিং│    │ (Qwen/Gemma)       │  │
-│  └─────────────┘    └─────────────┘    └─────────────────────┘  │
-│                                                │                  │
-│                                                ▼                  │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────────────┐  │
-│  │ রিট্রেন     │◀───│ মনিটর        │◀───│ ঝুঁকি মূল্যায়ন       │  │
-│  │ ট্রিগার     │    │             │    │ ও সুপারিশ            │  │
-│  └─────────────┘    └─────────────┘    └─────────────────────┘  │
-│         ▲                                                          │
-│         │                                                          │
-│  ┌──────┴──────┐    ┌─────────────┐    ┌─────────────────────┐  │
-│  │ মডেল       │◀───│ A/B টেস্ট    │───▶│ উৎপাদন              │  │
-│  │ রেজিস্ট্রি  │    │ ফ্রেমওয়ার্ক  │    │ মোতায়েন            │  │
-│  └─────────────┘    └─────────────┘    └─────────────────────┘  │
-│                                                                   │
-└──────────────────────────────────────────────────────────────────┘
+```mermaid
+sequenceDiagram
+    participant M as Model
+    participant D as Dashboard
+    participant A as Alerts
+    participant O as Ops
+    
+    loop Real-time
+        M-->>D: Predictions + Metrics
+        D->>D: Update Charts
+        D->>A: Check Thresholds
+        A->>O: Alert if Breach
+    end
 ```
 
-## মূল বৈশিষ্ট্য
+## Model Registry Flow
 
-### ফিচার ইঞ্জিনিয়ারিং
-
-পাইপলাইন এই ভবিষ্যদ্বাণীমূলক ফিচারগুলি বের করে:
-
-- **অভিযোগ মেট্রিক্স**: মোট অভিযোগ, সাম্প্রতিক অভিযোগ (30d/90d), অভিযোগ বিভাগ
-- **সাপোর্ট টিকেট মেট্রিক্স**: খোলা টিকেট, গড় রেজোলিউশন সময়, টিকেট ফ্রিকোয়েন্সি
-- **বিলিং মেট্রিক্স**: পেমেন্ট বিলম্ব, প্ল্যান পরিবর্তন, সাবস্ক্রিপশন সময়কাল
-- **এনগেজমেন্ট স্কোর**: সমস্ত ফ্যাক্টর থেকে প্রাপ্ত যৌগিক স্কোর
-
-### ঝুঁকি স্কোরিং
-
-```
-ঝুঁকি স্কোর = f(অভিযোগ, টিকেট, বিলিং, এনগেজমেন্ট)
-
-যেখানে:
-- উচ্চ অভিযোগ পরিমাণ (+0.3)
-- খোলা সাপোর্ট টিকেট (+0.2)
-- পেমেন্ট বিলম্ব (+0.15)
-- ধীর রেজোলিউশন সময় (+0.1)
-- কম এনগেজমেন্ট স্কোর (+0.2)
+```mermaid
+flowchart TD
+    A[Training Complete] --> B{Meet Threshold?}
+    B -->|Yes| C[Register Model]
+    B -->|No| D[Log Failure]
+    C --> E[Tag Version]
+    E --> F[Add Metadata]
+    F --> G[Stage for Deployment]
+    
+    style C fill:#c8e6c9
+    style D fill:#ffcdd2
 ```
 
-## ডেমো চালানো
+## Automated Retraining Pipeline
+
+```mermaid
+graph TD
+    A[Scheduled Trigger] --> B[Data Collection]
+    A --> C[Manual Trigger]
+    B --> D[New Training Run]
+    C --> D
+    D --> E{New Model Better?}
+    E -->|Yes| F[Deploy New Model]
+    E -->|No| G[Keep Current]
+    
+    style F fill:#c8e6c9
+    style G fill:#fff3e0
+```
+
+## Key MLOps Components
+
+| Component | Purpose | Implementation |
+|-----------|---------|----------------|
+| Model Registry | Store and version models | Local file system with metadata |
+| Monitoring | Track performance metrics | Real-time dashboard |
+| Drift Detection | Detect data/concept drift | Statistical tests on features |
+| Auto-Retrain | Trigger retraining when needed | Scheduled + threshold-based |
+
+## Monitoring Metrics
+
+```mermaid
+graph LR
+    A[Input Features] --> B[Prediction Drift]
+    C[Model Version] --> D[Accuracy Metrics]
+    E[Timestamp] --> F[Latency Tracking]
+    
+    B --> G[Dashboard]
+    D --> G
+    F --> G
+    
+    style G fill:#e8eaf6
+```
+
+## A/B Testing Framework
+
+```mermaid
+flowchart TD
+    A[Incoming Request] --> B{Split Traffic}
+    B -->|50%| C[Model A - Current]
+    B -->|50%| D[Model B - New]
+    C --> E[Collect Metrics]
+    D --> E
+    E --> F{Compare Performance}
+    F --> G{Model B Better?}
+    G -->|Yes| H[Deploy Model B]
+    G -->|No| I[Keep Model A]
+    
+    style H fill:#c8e6c9
+    style I fill:#fff3e0
+```
+
+## Folder Structure
+
+```
+mlops/
+├── model_registry.py         # Store and retrieve models
+├── monitoring_dashboard.py   # Real-time metrics
+├── drift_detection.py        # Detect model/data drift
+├── auto_retrain.py           # Trigger retraining
+├── ab_testing.py            # A/B testing framework
+└── churn_pipeline.py        # End-to-end pipeline
+```
+
+## Running the Pipeline
 
 ```bash
-# প্রজেক্ট ডিরেক্টরিতে যান
-cd classifier-app
+# Start monitoring dashboard
+python mlops/monitoring_dashboard.py
 
-# সম্পূর্ণ MLOps ডেমো চালান
-python churn_prediction_demo.py
+# Run complete pipeline
+python mlops/churn_pipeline.py
+
+# Check model registry
+python mlops/model_registry.py --list
 ```
 
-### ডেমো প্রবাহ
+## Production Checklist
 
-1. **বেসিক পূর্বাভাস**: একক গ্রাহককে পাইপলাইনে চালান
-2. **মডেল রেজিস্ট্রি**: একাধিক মডেল ভার্সন রেজিস্টার করুন
-3. **মনিটরিং**: পূর্বাভাস রেকর্ড করুন এবং স্বাস্থ্য পরীক্ষা করুন
-4. **A/B টেস্টিং**: Qwen বনাম Gemma মডেল তুলনা করুন
-5. **অটো-রিট্রেনিং**: ড্রিফট সনাক্ত করুন এবং পুনঃপ্রশিক্ষণ ট্রিগার করুন
+- [ ] Data validation passes
+- [ ] Model meets accuracy threshold (>85%)
+- [ ] Latency within SLA (<500ms)
+- [ ] Monitoring dashboard active
+- [ ] Alerts configured
+- [ ] Rollback procedure documented
 
-## পারফরম্যান্স বিবেচনা
+*এই MLOps pipeline production-এ customer churn prediction models-এর lifecycle manage করার জন্য complete framework provide করে।*
 
-### স্থানীয় LLM মোতায়েনের জন্য
+## Performance Baselines
 
-- **মডেল সিলেকশন**: গতির জন্য Qwen 2.5 1.5B, নির্ভুলতার জন্য Gemma 4 E4B
-- **ব্যাচ প্রসেসিং**: দক্ষতার জন্য গ্রাহকদের ব্যাচে প্রসেস করুন
-- **ক্যাশিং**: API কল কমাতে ঘন ঘন পূর্বাভাস ক্যাশ করুন
-- **ফলব্যাক**: LLM অনুপলব্ধ হলে নিয়ম-ভিত্তিক পূর্বাভাস
+| Metric | Target | Critical |
+|--------|--------|----------|
+| Accuracy | >85% | <80% |
+| Precision | >80% | <75% |
+| Recall | >82% | <78% |
+| Latency | <500ms | >1000ms |
+| Uptime | 99.9% | <99% |
 
-### পর্যবেক্ষণ থ্রেশহোল্ড
-
-| মেট্রিক | সতর্কতা | গুরুতর |
-|--------|---------|----------|
-| ল্যাটেন্সি | > 2000ms | > 5000ms |
-| ত্রুটি হার | > 5% | > 10% |
-| নির্ভুলতা ড্রিফট | > 5% | > 10% |
-
-## পরবর্তী পদক্ষেপ
-
-1. **CRM ইন্টিগ্রেশন**: বাস্তব গ্রাহক ডাটাবেসের সাথে সংযুক্ত করুন
-2. **ওয়েবহুক সেটআপ**: বিজ্ঞপ্তি সিস্টেম কনফিগার করুন
-3. **CI/CD বাস্তবায়ন**: মডেল মোতায়েন পাইপলাইন স্বয়ংক্রিয় করুন
-4. **ড্যাশবোর্ড যোগ করুন**: Streamlit মনিটরিং ড্যাশবোর্ড তৈরি করুন
-
-## সম্পর্কিত ডকুমেন্টেশন
-
-- [Qwen দিয়ে ISP শ্রেণীবিভাগ](../isp-classification-qwen.md)
-- [Gemma দিয়ে ISP শ্রেণীবিভাগ](../isp-classification-gemma.md)
-- [Qwen দিয়ে শুরু করা](../getting-started-qwen.md)
-- [Qwen স্ট্রেস টেস্টিং](../stress-testing-qwen.md)
+Critical thresholds cross হলে team-কে notify করতে automated alerts set up করুন।

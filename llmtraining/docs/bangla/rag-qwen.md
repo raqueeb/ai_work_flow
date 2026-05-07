@@ -2,6 +2,8 @@
 
 > ছোট LLM গুলো কীভাবে Retrieval-Augmented Generation ব্যবহার করে বিশেষায়িত প্রশ্নের সঠিক উত্তর দিতে পারে
 
+RAG (Retrieval-Augmented Generation) হলো এমন একটি technique যা AI responses-কে knowledge base থেকে relevant information retrieve করে enhance করে। এই section **Qwen 2.5 1.5B** model দিয়ে RAG implement করার প্রক্রিয়া ব্যাখ্যা করে।
+
 ## RAG কী?
 
 **Retrieval-Augmented Generation (RAG)** একটি কৌশল যেখানে:
@@ -20,41 +22,65 @@
 | **স্মৃতি** | সীমিত কনটেক্সট উইন্ডো | প্রাসঙ্গিক তথ্য গতিশীলভাবে যোগ |
 | **খরচ** | নির্ভুলতার জন্য বড় মডেল দরকার | ছোট মডেল + RAG = নির্ভুল |
 
-## আর্কিটেকচার
+## RAG Architecture
 
+```mermaid
+flowchart TD
+    A[User Query] --> B[Query Embedding]
+    B --> C[Vector Search]
+    C --> D[Knowledge Base]
+    D --> E[Relevant Documents]
+    E --> F[Context Assembly]
+    F --> G[LLM Generation]
+    G --> H[Response + Citations]
+    
+    style A fill:#e3f2fd
+    style D fill:#fff3e0
+    style H fill:#c8e6c9
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     RAG সিস্টেম আর্কিটেকচার                       │
-└─────────────────────────────────────────────────────────────────┘
 
-┌──────────────┐    ┌─────────────────┐    ┌───────────────────┐
-│   প্রশ্ন      │───▶│   উদ্ধার         │───▶│    উৎপাদন         │
-│              │    │                 │    │                   │
-│ "ফাইবার কাটা  │    │ জ্ঞান ভিত্তি থেকে│    │ Qwen 2.5 1.5B     │
-│  কীভাবে      │    │ প্রাসঙ্গিক ডকস   │    │ + প্রেক্ষাপট → উত্তর│
-│  ঠিক করব?"   │    │ খুঁজে বের করা   │    │                   │
-└──────────────┘    └─────────────────┘    └───────────────────┘
-                           │
-                           ▼
-                   ┌─────────────────┐
-                   │  জ্ঞান ভিত্তি     │
-                   │                 │
-                   │ • ISP ম্যানুয়াল  │
-                   │ • SLA ডকুমেন্ট   │
-                   │ • প্রক্রিয়া      │
-                   │ • নীতিমালা       │
-                   └─────────────────┘
+## RAG Workflow
 
-┌─────────────────────────────────────────────────────────────────┐
-│ ধাপ ১: ইনডেক্সিং (অফলাইন - একবার করা হয়)                      │
-│   নথি → টুকরা → এম্বেড → ভেক্টর ডাটাবেসে সংরক্ষণ               │
-├─────────────────────────────────────────────────────────────────┤
-│ ধাপ ২: উদ্ধার (প্রশ্নের সময়)                                    │
-│   প্রশ্ন → এম্বেড → ভেক্টর ডিবি অনুসন্ধান → প্রাসঙ্গিক টুকরা      │
-├─────────────────────────────────────────────────────────────────┤
-│ ধাপ ৩: উৎপাদন (প্রশ্নের সময়)                                    │
-│   প্রশ্ন + টুকরা → LLM → উত্তর                                  │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph Ingestion
+        A[Documents] --> B[Chunking]
+        B --> C[Embedding]
+        C --> D[Vector Index]
+    end
+    
+    subgraph Query
+        E[User Question] --> F[Query Embed]
+        F --> G[Similarity Search]
+    end
+    
+    subgraph Generation
+        G --> H[Top-K Results]
+        H --> I[Prompt Assembly]
+        I --> J[LLM Response]
+    end
+    
+    style A fill:#fce4ec
+    style E fill:#e3f2fd
+    style J fill:#c8e6c9
+```
+
+## Query Processing Pipeline
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant Q as Query Engine
+    participant V as Vector DB
+    participant L as LLM
+    
+    U->>Q: "What is the SLA for P1 incidents?"
+    Q->>V: Embed query
+    V-->>Q: Similar chunks found
+    Q->>Q: Assemble context
+    Q->>L: Prompt with context
+    L-->>Q: Generated response
+    Q-->>U: "P1 SLA is 4 hours..."
 ```
 
 ## RAG কীভাবে কাজ করে - ধাপে ধাপে
@@ -81,13 +107,41 @@ FAISS ভেক্টর ইনডেক্স
 3টি প্রাসঙ্গিক নথি টুকরা ফেরত দেওয়া
 ```
 
-### ধাপ ৩: উৎপাদন
+### ধাপ ৩: উৎপাদন (প্রশ্নের সময়)
 ```
 সিস্টেম: "এই প্রেক্ষাপটের ভিত্তিতে উত্তর দিন: [উদ্ধারিত টুকরা]"
 ব্যবহারকারী: "ফাইবার ব্যাঘাতের কারণ কী?"
     ↓
 Qwen 2.5 1.5B প্রক্রিয়া করে এবং উত্তর দেয়
 ```
+
+## Key Components
+
+```mermaid
+graph TD
+    A[RAG System] --> B[Document Loader]
+    A --> C[Text Splitter]
+    A --> D[Embeddings]
+    A --> E[Vector Store]
+    A --> F[Retriever]
+    A --> G[Generator LLM]
+    
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    
+    style A fill:#e8eaf6
+    style G fill:#c8e6c9
+```
+
+## Simple RAG Implementation
+
+`qwen-rag/` folder-এ demos আছে যা দেখায়:
+- Documents-কে vector store-এ index করা
+- Queries-এর জন্য relevant context retrieve করা
+- Citations সহ grounded responses generate করা
 
 ## ডেমো চালানো
 
@@ -195,6 +249,16 @@ on the location and severity of the cut.
 → উৎপাদন: নির্দিষ্ট বাধ্যবাধকতার সারসংক্ষেপ
 ```
 
+## When to Use RAG
+
+| Scenario | Use RAG | Use Direct LLM |
+|----------|---------|----------------|
+| Domain-specific questions | Yes | No |
+| Need for up-to-date info | Yes | No |
+| Transparency required | Yes | No |
+| General knowledge tasks | No | Yes |
+| Creative tasks | No | Yes |
+
 ## উৎপাদন বাস্তবায়ন
 
 ### Sentence Transformers + FAISS সহ
@@ -249,7 +313,24 @@ results = collection.query(
 | **বিলম্ব** | 0.5 সেকেন্ড | 0.8 সেকেন্ড |
 | **মেমোরি** | 1.5B প্যারামিটার | 1.5B + KB |
 
+## Performance Considerations
+
+| Factor | Impact | Recommendation |
+|--------|--------|----------------|
+| Chunk size | Affects context relevance | 500-1000 tokens optimal |
+| Top-K results | Affects response quality | 3-5 documents |
+| Embedding model | Affects search accuracy | Use same model for indexing/query |
+
 ## এন্টারপ্রাইজের জন্য সুবিধা
+
+## RAG Benefits
+
+- **Accuracy**: Responses grounded in your documents
+- **Transparency**: Can cite sources
+- **Updatability**: Knowledge base can be updated without retraining
+- **Cost-effective**: No need to fine-tune the model
+
+এ
 
 1. **গোপনীয়তা**: সব ডেটা স্থানীয় থাকে, ক্লাউড API কল নেই
 2. **গতি**: স্থানীয় মডেল দিয়ে সেকেন্ডের ভগ্নাংশে প্রতিক্রিয়া
@@ -300,6 +381,24 @@ documents = fetch_from_database()
 vector_store.add_documents(documents)
 ```
 
+## Demo Setup
+
+```bash
+# Ensure Qwen model is loaded in LM Studio
+# Run the RAG demo
+python qwen-rag/simple_rag_demo.py
+```
+
+## Quick Start
+
+1. **Documents prepare করুন**: আপনার ISP policies, procedures, এবং troubleshooting guides add করুন
+2. **Content index করুন**: Vector store create করতে indexing script run করুন
+3. **Query করুন**: Questions ask করুন এবং citations সহ grounded answers পান
+
+এই approach টি বিশেষভাবে useful HR automation, policy compliance, এবং technical support-এর জন্য যেখানে accuracy এবং source transparency critical।
+
 ---
 
 *Link3 এন্টারপ্রাইজ AI অটোমেশনের অংশ - স্থানীয় LLM-চালিত সমাধান*
+
+*RAG enables the LLM to provide accurate, document-grounded responses for domain-specific ISP support scenarios.*

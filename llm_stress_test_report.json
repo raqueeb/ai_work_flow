@@ -1,0 +1,505 @@
+{
+  "model": "qwen2.5-coder-1.5b-instruct",
+  "total_tests": 55,
+  "correct": 18,
+  "accuracy_percent": 32.7,
+  "avg_time_ms": 2973.0,
+  "avg_tokens": 792.7,
+  "results": [
+    {
+      "idx": 1,
+      "complaint": "my onu has a red light",
+      "expected": "ISP-001",
+      "predicted": "ISP-001",
+      "status": "PASS",
+      "tokens": 794,
+      "time_ms": 3049.1
+    },
+    {
+      "idx": 2,
+      "complaint": "pon led is red",
+      "expected": "ISP-001",
+      "predicted": "ISP-001",
+      "status": "PASS",
+      "tokens": 791,
+      "time_ms": 2816.6
+    },
+    {
+      "idx": 3,
+      "complaint": "it rained last night and now internet is gone",
+      "expected": "ISP-006",
+      "predicted": "ISP-016",
+      "status": "FAIL",
+      "tokens": 797,
+      "time_ms": 3044.0
+    },
+    {
+      "idx": 4,
+      "complaint": "water got into the fiber box",
+      "expected": "ISP-006",
+      "predicted": "ISP-036",
+      "status": "FAIL",
+      "tokens": 793,
+      "time_ms": 2839.4
+    },
+    {
+      "idx": 5,
+      "complaint": "signal is reading -32 dBm",
+      "expected": "ISP-047",
+      "predicted": "ISP-048",
+      "status": "FAIL",
+      "tokens": 795,
+      "time_ms": 2861.6
+    },
+    {
+      "idx": 6,
+      "complaint": "my optical power is -28 dbm",
+      "expected": "ISP-015",
+      "predicted": "ISP-025",
+      "status": "FAIL",
+      "tokens": 796,
+      "time_ms": 2952.9
+    },
+    {
+      "idx": 7,
+      "complaint": "the drop wire is snapped",
+      "expected": "ISP-023",
+      "predicted": "ISP-023",
+      "status": "PASS",
+      "tokens": 792,
+      "time_ms": 2784.9
+    },
+    {
+      "idx": 8,
+      "complaint": "cable outside is damaged",
+      "expected": "ISP-023",
+      "predicted": "ISP-023",
+      "status": "PASS",
+      "tokens": 792,
+      "time_ms": 2794.1
+    },
+    {
+      "idx": 9,
+      "complaint": "there are sparks coming from the pole wire",
+      "expected": "ISP-035",
+      "predicted": "ISP-036",
+      "status": "FAIL",
+      "tokens": 795,
+      "time_ms": 2875.6
+    },
+    {
+      "idx": 10,
+      "complaint": "messenger wire has induction",
+      "expected": "ISP-035",
+      "predicted": "ISP-036",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2775.2
+    },
+    {
+      "idx": 11,
+      "complaint": "los light keeps blinking",
+      "expected": "ISP-011",
+      "predicted": "ISP-010",
+      "status": "FAIL",
+      "tokens": 791,
+      "time_ms": 2719.9
+    },
+    {
+      "idx": 12,
+      "complaint": "fiber cord is bent too much",
+      "expected": "ISP-042",
+      "predicted": "ISP-043",
+      "status": "FAIL",
+      "tokens": 793,
+      "time_ms": 2793.0
+    },
+    {
+      "idx": 13,
+      "complaint": "lightning hit and wan port is dead",
+      "expected": "ISP-031",
+      "predicted": "ISP-031",
+      "status": "PASS",
+      "tokens": 795,
+      "time_ms": 2949.9
+    },
+    {
+      "idx": 14,
+      "complaint": "netflix keeps buffering every evening",
+      "expected": "ISP-002",
+      "predicted": "ISP-002",
+      "status": "PASS",
+      "tokens": 793,
+      "time_ms": 3078.6
+    },
+    {
+      "idx": 15,
+      "complaint": "youtube videos load very slowly",
+      "expected": "ISP-004",
+      "predicted": "ISP-004",
+      "status": "PASS",
+      "tokens": 792,
+      "time_ms": 2841.9
+    },
+    {
+      "idx": 16,
+      "complaint": "facebook is not loading fast",
+      "expected": "ISP-004",
+      "predicted": "ISP-016",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2900.9
+    },
+    {
+      "idx": 17,
+      "complaint": "my game ping is 300ms",
+      "expected": "ISP-007",
+      "predicted": "ISP-017",
+      "status": "FAIL",
+      "tokens": 796,
+      "time_ms": 3118.0
+    },
+    {
+      "idx": 18,
+      "complaint": "dns not resolving",
+      "expected": "ISP-008",
+      "predicted": "ISP-038",
+      "status": "FAIL",
+      "tokens": 790,
+      "time_ms": 2656.6
+    },
+    {
+      "idx": 19,
+      "complaint": "some websites open others dont",
+      "expected": "ISP-016",
+      "predicted": "ISP-026",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 3337.2
+    },
+    {
+      "idx": 20,
+      "complaint": "cant reach certain sites",
+      "expected": "ISP-013",
+      "predicted": "ISP-012",
+      "status": "FAIL",
+      "tokens": 791,
+      "time_ms": 2848.8
+    },
+    {
+      "idx": 21,
+      "complaint": "google works but nothing else",
+      "expected": "ISP-041",
+      "predicted": "ISP-047",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2870.5
+    },
+    {
+      "idx": 22,
+      "complaint": "zoom calls freeze and lag",
+      "expected": "ISP-025",
+      "predicted": "ISP-026",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2858.2
+    },
+    {
+      "idx": 23,
+      "complaint": "teams meeting has high jitter",
+      "expected": "ISP-025",
+      "predicted": "ISP-026",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2839.4
+    },
+    {
+      "idx": 24,
+      "complaint": "voip calls keep dropping",
+      "expected": "ISP-020",
+      "predicted": "ISP-026",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2800.7
+    },
+    {
+      "idx": 25,
+      "complaint": "vpn connection blocked",
+      "expected": "ISP-034",
+      "predicted": "ISP-035",
+      "status": "FAIL",
+      "tokens": 790,
+      "time_ms": 2646.1
+    },
+    {
+      "idx": 26,
+      "complaint": "international sites very slow",
+      "expected": "ISP-028",
+      "predicted": "ISP-026",
+      "status": "FAIL",
+      "tokens": 791,
+      "time_ms": 2774.3
+    },
+    {
+      "idx": 27,
+      "complaint": "cctv app cannot connect remotely",
+      "expected": "ISP-032",
+      "predicted": "ISP-032",
+      "status": "PASS",
+      "tokens": 794,
+      "time_ms": 2823.8
+    },
+    {
+      "idx": 28,
+      "complaint": "pppoe authentication fails",
+      "expected": "ISP-033",
+      "predicted": "ISP-034",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2796.7
+    },
+    {
+      "idx": 29,
+      "complaint": "torrent speed is 5kbps",
+      "expected": "ISP-019",
+      "predicted": "ISP-019",
+      "status": "PASS",
+      "tokens": 794,
+      "time_ms": 2771.1
+    },
+    {
+      "idx": 30,
+      "complaint": "port forwarding not working for my camera",
+      "expected": "ISP-021",
+      "predicted": "ISP-023",
+      "status": "FAIL",
+      "tokens": 794,
+      "time_ms": 2757.6
+    },
+    {
+      "idx": 31,
+      "complaint": "all leds are green but no internet",
+      "expected": "ISP-049",
+      "predicted": "ISP-049",
+      "status": "PASS",
+      "tokens": 794,
+      "time_ms": 2820.2
+    },
+    {
+      "idx": 32,
+      "complaint": "subscription expired yesterday",
+      "expected": "ISP-003",
+      "predicted": "ISP-012",
+      "status": "FAIL",
+      "tokens": 790,
+      "time_ms": 2630.8
+    },
+    {
+      "idx": 33,
+      "complaint": "paid the bill but service still down",
+      "expected": "ISP-010",
+      "predicted": "ISP-010",
+      "status": "PASS",
+      "tokens": 794,
+      "time_ms": 2816.7
+    },
+    {
+      "idx": 34,
+      "complaint": "billed twice this month",
+      "expected": "ISP-044",
+      "predicted": "ISP-026",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 2895.0
+    },
+    {
+      "idx": 35,
+      "complaint": "auto-pay failed on card",
+      "expected": "ISP-030",
+      "predicted": "ISP-031",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 3012.5
+    },
+    {
+      "idx": 36,
+      "complaint": "plan upgrade not reflected",
+      "expected": "ISP-040",
+      "predicted": "ISP-041",
+      "status": "FAIL",
+      "tokens": 791,
+      "time_ms": 3160.9
+    },
+    {
+      "idx": 37,
+      "complaint": "speed is locked at 10mbps",
+      "expected": "ISP-038",
+      "predicted": "ISP-038",
+      "status": "PASS",
+      "tokens": 796,
+      "time_ms": 3109.7
+    },
+    {
+      "idx": 38,
+      "complaint": "static ip stopped working",
+      "expected": "ISP-017",
+      "predicted": "ISP-018",
+      "status": "FAIL",
+      "tokens": 791,
+      "time_ms": 2888.9
+    },
+    {
+      "idx": 39,
+      "complaint": "bill amount is wrong",
+      "expected": "ISP-026",
+      "predicted": "ISP-026",
+      "status": "PASS",
+      "tokens": 791,
+      "time_ms": 3243.3
+    },
+    {
+      "idx": 40,
+      "complaint": "wifi signal is weak in bedroom",
+      "expected": "ISP-005",
+      "predicted": "ISP-013",
+      "status": "FAIL",
+      "tokens": 793,
+      "time_ms": 2889.4
+    },
+    {
+      "idx": 41,
+      "complaint": "router keeps restarting itself",
+      "expected": "ISP-009",
+      "predicted": "ISP-019",
+      "status": "FAIL",
+      "tokens": 791,
+      "time_ms": 2783.6
+    },
+    {
+      "idx": 42,
+      "complaint": "cannot login to router admin",
+      "expected": "ISP-014",
+      "predicted": "ISP-018",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 3614.4
+    },
+    {
+      "idx": 43,
+      "complaint": "forgot my wifi password",
+      "expected": "ISP-036",
+      "predicted": "ISP-037",
+      "status": "FAIL",
+      "tokens": 791,
+      "time_ms": 3144.9
+    },
+    {
+      "idx": 44,
+      "complaint": "5ghz network disappeared",
+      "expected": "ISP-029",
+      "predicted": "ISP-023",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 3354.1
+    },
+    {
+      "idx": 45,
+      "complaint": "2.4ghz band is very slow",
+      "expected": "ISP-012",
+      "predicted": "ISP-013",
+      "status": "FAIL",
+      "tokens": 796,
+      "time_ms": 3515.9
+    },
+    {
+      "idx": 46,
+      "complaint": "frequent wifi disconnections",
+      "expected": "ISP-022",
+      "predicted": "ISP-023",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 3109.8
+    },
+    {
+      "idx": 47,
+      "complaint": "router is getting very hot",
+      "expected": "ISP-027",
+      "predicted": "ISP-028",
+      "status": "FAIL",
+      "tokens": 792,
+      "time_ms": 3030.3
+    },
+    {
+      "idx": 48,
+      "complaint": "ont has no power at all",
+      "expected": "ISP-045",
+      "predicted": "ISP-046",
+      "status": "FAIL",
+      "tokens": 793,
+      "time_ms": 3390.6
+    },
+    {
+      "idx": 49,
+      "complaint": "switch box is making humming noise",
+      "expected": "ISP-039",
+      "predicted": "ISP-039",
+      "status": "PASS",
+      "tokens": 793,
+      "time_ms": 3228.4
+    },
+    {
+      "idx": 50,
+      "complaint": "lan cable speed is slow",
+      "expected": "ISP-024",
+      "predicted": "ISP-024",
+      "status": "PASS",
+      "tokens": 792,
+      "time_ms": 3091.1
+    },
+    {
+      "idx": 51,
+      "complaint": "smart tv buffers on all apps",
+      "expected": "ISP-037",
+      "predicted": "ISP-038",
+      "status": "FAIL",
+      "tokens": 793,
+      "time_ms": 3401.8
+    },
+    {
+      "idx": 52,
+      "complaint": "microwave kills wifi",
+      "expected": "ISP-043",
+      "predicted": "ISP-043",
+      "status": "PASS",
+      "tokens": 791,
+      "time_ms": 3203.5
+    },
+    {
+      "idx": 53,
+      "complaint": "website redirects to spam",
+      "expected": "ISP-046",
+      "predicted": "ISP-046",
+      "status": "PASS",
+      "tokens": 791,
+      "time_ms": 3050.0
+    },
+    {
+      "idx": 54,
+      "complaint": "need to shift connection to new address",
+      "expected": "ISP-048",
+      "predicted": "ISP-048",
+      "status": "PASS",
+      "tokens": 794,
+      "time_ms": 2999.3
+    },
+    {
+      "idx": 55,
+      "complaint": "firmware update failed on multiple devices",
+      "expected": "ISP-050",
+      "predicted": "ISP-031",
+      "status": "FAIL",
+      "tokens": 794,
+      "time_ms": 3151.7
+    }
+  ]
+}

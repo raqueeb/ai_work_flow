@@ -1,0 +1,31 @@
+======================================================================
+ NETWORK MONITORING & LLM REASONING DEMO
+======================================================================
+
+[1] Running ping to 8.8.8.8
+Pinging 8.8.8.8 with 32 bytes of data:
+Reply from 8.8.8.8: bytes=32 time=28ms TTL=114
+Reply from 8.8.8.8: bytes=32 time=27ms TTL=114
+Reply from 8.8.8.8: bytes=32 time=28ms TTL=114
+Reply from 8.8.8.8: bytes=32 time=29ms TTL=114
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 27ms, Maximum = 29ms, Average = 28ms
+
+[2] Running traceroute to 8.8.8.8
+Error executing tracert 8.8.8.8: Command '['tracert', '8.8.8.8']' timed out after 15 seconds
+
+[3] Running DNS lookup for google.com
+A records for google.com: 142.251.43.78
+
+[4] Asking LLM to analyze the data...
+
+LLM ANALYSIS:
+
+Error contacting LLM: HTTPConnectionPool(host='localhost', port=1234): Read timed out. (read timeout=30)
+
+======================================================================
+ DEMO COMPLETE
+======================================================================

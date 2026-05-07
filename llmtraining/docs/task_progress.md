@@ -1,0 +1,19 @@
+- [x] Created English index.md, why-local-inference.md, streamlit-apps.md, getting-started-qwen.md
+- [x] Completed upgrading-to-gemma.md (English)
+- [ ] Write qwen-demos.md (English)
+- [ ] Write gemma-demos.md (English)
+- [ ] Write isp-classification-qwen.md (English)
+- [ ] Write isp-classification-gemma.md (English)
+- [ ] Write advanced-reasoning.md (English)
+- [ ] Write cybersec-analysis.md (English)
+- [ ] Write network-monitoring.md (English)
+- [ ] Write stress-testing-qwen.md (English)
+- [ ] Write stress-testing.md (English)
+- [ ] Write enterprise-apps.md (English)
+- [ ] Write mcp-servers.md (English)
+- [ ] Write model-comparison.md (English)
+- [ ] Write getting-started.md (English)
+- [ ] Write basic-demos.md (English)
+- [ ] Write isp-classification.md (English)
+- [ ] Create Bangla versions of all above files
+- [ ] Verify mkdocs build

@@ -1,0 +1,13 @@
+# RAG Demo with Qwen 2.5 1.5B - Requirements
+
+# Core dependencies
+sentence-transformers==2.2.2
+faiss-cpu==1.7.4
+numpy==1.24.3
+requests==2.31.0
+
+# Optional: For GPU support (if available)
+# faiss-gpu==1.7.4
+
+# Note: LM Studio must be running with Qwen2.5-1.5B-Instruct model loaded
+# Download from: https://lmstudio.ai/ or use the LM Studio application

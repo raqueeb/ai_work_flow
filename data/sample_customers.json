@@ -1,0 +1,140 @@
+[
+  {
+    "customer_id": "CUST-2024-001",
+    "name": "Abdul Karim",
+    "plan": "Business Pro 50Mbps",
+    "subscription_months": 18,
+    "complaints": [
+      {"date": "2024-01-05", "category": "network", "description": "Frequent disconnections"},
+      {"date": "2024-01-10", "category": "technical", "description": "Slow speeds during peak hours"},
+      {"date": "2024-01-15", "category": "service", "description": "Support response time poor"}
+    ],
+    "billing_history": {"months": 18, "delays": 1, "downgrades": 0},
+    "support_tickets": [
+      {"id": "TKT-1001", "status": "resolved", "resolution_hours": 36},
+      {"id": "TKT-1002", "status": "open", "resolution_hours": null}
+    ],
+    "churned": false,
+    "risk_profile": "HIGH"
+  },
+  {
+    "customer_id": "CUST-2024-002",
+    "name": "Fatema Begum",
+    "plan": "Home Basic 10Mbps",
+    "subscription_months": 6,
+    "complaints": [
+      {"date": "2024-01-08", "category": "billing", "description": "Incorrect charge on bill"}
+    ],
+    "billing_history": {"months": 6, "delays": 2, "downgrades": 1},
+    "support_tickets": [{"id": "TKT-1003", "status": "resolved", "resolution_hours": 12}],
+    "churned": true,
+    "risk_profile": "HIGH"
+  },
+  {
+    "customer_id": "CUST-2024-003",
+    "name": "Rahman Enterprise",
+    "plan": "Enterprise 100Mbps",
+    "subscription_months": 24,
+    "complaints": [],
+    "billing_history": {"months": 24, "delays": 0, "downgrades": 0},
+    "support_tickets": [{"id": "TKT-1004", "status": "resolved", "resolution_hours": 4}],
+    "churned": false,
+    "risk_profile": "LOW"
+  },
+  {
+    "customer_id": "CUST-2024-004",
+    "name": "Mohammad Hassan",
+    "plan": "Home Premium 25Mbps",
+    "subscription_months": 12,
+    "complaints": [
+      {"date": "2024-01-12", "category": "network", "description": "Occasional slow speeds"},
+      {"date": "2024-01-18", "category": "technical", "description": "Router configuration help"}
+    ],
+    "billing_history": {"months": 12, "delays": 0, "downgrades": 0},
+    "support_tickets": [{"id": "TKT-1005", "status": "resolved", "resolution_hours": 24}],
+    "churned": false,
+    "risk_profile": "MEDIUM"
+  },
+  {
+    "customer_id": "CUST-2024-005",
+    "name": "Tech Solutions Ltd",
+    "plan": "Business Pro 50Mbps",
+    "subscription_months": 36,
+    "complaints": [
+      {"date": "2024-01-02", "category": "network", "description": "Fiber cut affecting connectivity"},
+      {"date": "2024-01-03", "category": "network", "description": "Continued issues after repair"}
+    ],
+    "billing_history": {"months": 36, "delays": 1, "downgrades": 0},
+    "support_tickets": [{"id": "TKT-1006", "status": "resolved", "resolution_hours": 48}],
+    "churned": false,
+    "risk_profile": "MEDIUM"
+  },
+  {
+    "customer_id": "CUST-2024-006",
+    "name": "Nusrat Jahan",
+    "plan": "Home Basic 10Mbps",
+    "subscription_months": 3,
+    "complaints": [
+      {"date": "2024-01-10", "category": "service", "description": "Installation delay"},
+      {"date": "2024-01-15", "category": "billing", "description": "Promotional rate ended early"}
+    ],
+    "billing_history": {"months": 3, "delays": 1, "downgrades": 0},
+    "support_tickets": [{"id": "TKT-1007", "status": "open", "resolution_hours": null}],
+    "churned": true,
+    "risk_profile": "HIGH"
+  },
+  {
+    "customer_id": "CUST-2024-007",
+    "name": "Green Valley Restaurant",
+    "plan": "Business Standard 25Mbps",
+    "subscription_months": 15,
+    "complaints": [],
+    "billing_history": {"months": 15, "delays": 0, "downgrades": 0},
+    "support_tickets": [{"id": "TKT-1008", "status": "resolved", "resolution_hours": 6}],
+    "churned": false,
+    "risk_profile": "LOW"
+  },
+  {
+    "customer_id": "CUST-2024-008",
+    "name": "Ahmed Electronics",
+    "plan": "Business Pro 50Mbps",
+    "subscription_months": 20,
+    "complaints": [
+      {"date": "2024-01-05", "category": "network", "description": "Intermittent connectivity"},
+      {"date": "2024-01-08", "category": "technical", "description": "VPN configuration issues"},
+      {"date": "2024-01-12", "category": "network", "description": "Speed degradation"},
+      {"date": "2024-01-15", "category": "service", "description": "Billing dispute"}
+    ],
+    "billing_history": {"months": 20, "delays": 3, "downgrades": 1},
+    "support_tickets": [
+      {"id": "TKT-1009", "status": "resolved", "resolution_hours": 72},
+      {"id": "TKT-1010", "status": "open", "resolution_hours": null}
+    ],
+    "churned": true,
+    "risk_profile": "HIGH"
+  },
+  {
+    "customer_id": "CUST-2024-009",
+    "name": "Dr. Shahid Anwar",
+    "plan": "Home Premium 25Mbps",
+    "subscription_months": 30,
+    "complaints": [],
+    "billing_history": {"months": 30, "delays": 0, "downgrades": 0},
+    "support_tickets": [{"id": "TKT-1011", "status": "resolved", "resolution_hours": 2}],
+    "churned": false,
+    "risk_profile": "LOW"
+  },
+  {
+    "customer_id": "CUST-2024-010",
+    "name": "City View Cafe",
+    "plan": "Business Standard 25Mbps",
+    "subscription_months": 8,
+    "complaints": [
+      {"date": "2024-01-14", "category": "network", "description": "WiFi coverage issues in outdoor area"}
+    ],
+    "billing_history": {"months": 8, "delays": 0, "downgrades": 0},
+    "support_tickets": [{"id": "TKT-1012", "status": "resolved", "resolution_hours": 18}],
+    "churned": false,
+    "risk_profile": "LOW"
+  }
+]

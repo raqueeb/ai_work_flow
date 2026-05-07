@@ -1,0 +1,64 @@
+
+======================================================================
+ CYBERSECURITY ANALYSIS WITH GEMMA 4 E4B REASONING
+======================================================================
+
+This demo shows how local LLM reasoning can be applied to cybersecurity tasks.
+All analysis is performed locally using the Gemma 4 E4B model via LM Studio.
+
+======================================================================
+ CYBERSECURITY ANALYSIS: PORT SCAN
+======================================================================
+
+Scan Data:
+  Port Scan Report for 192.168.1.100 (scan performed 2026-04-29)
+Open ports:
+22/tcp open ssh
+23/tcp open telnet
+80/tcp open http
+443/tcp open https
+3306/tcp open mysql
+8080/tcp open http-proxy 
+
+Asking LLM to analyze...
+
+LLM ANALYSIS:
+
+Error contacting LLM: HTTPConnectionPool(host='localhost', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError("HTTPConnection(host='localhost', port=1234): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+
+======================================================================
+ CYBERSECURITY ANALYSIS: SUSPICIOUS LOG
+======================================================================
+
+Log Data:
+  [2026-04-29 10:15:23] Failed password for invalid user 'admin' from 203.0.113.42 port 22 ssh2[2026-04-29 10:15:25] Failed password for invalid user 'root' from 203.0.113.42 port 22 ssh2[2026-04-29 10:15:27] Failed password for invalid user 'administrator' from 203.0.113.42 port 22 ssh2
+[2026-04-29 10:15:30] Failed password for invalid user 'user' from 203.0.113.42 port 22 ssh2
+[2026-04-29 10:15:35] Connection closed by 203.0.113.42 port 22
+[2026-04-29 10:15:40] Invalid user 'test' from 203.0.113.42 port 22 
+
+Asking LLM to analyze...
+
+LLM ANALYSIS:
+
+Error contacting LLM: HTTPConnectionPool(host='localhost', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError("HTTPConnection(host='localhost', port=1234): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+
+======================================================================
+ CYBERSECURITY ANALYSIS: MALWARE TRAFFIC PATTERN
+======================================================================
+
+Traffic Description:
+  Observed network traffic:
+- Multiple DNS queries for random-looking subdomains of 'evil.example.com' (e.g., 'a8f3.evil.example.com', '9c2d.evil.example.com')
+- Responses are small, varying IP addresses
+- Followed by HTTPS connections to those IPs on port 443
+- Traffic occurs every 60 seconds, even when no user activity 
+
+Asking LLM to analyze...
+
+LLM ANALYSIS:
+
+Error contacting LLM: HTTPConnectionPool(host='localhost', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError("HTTPConnection(host='localhost', port=1234): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+
+======================================================================
+ DEMO COMPLETE
+======================================================================

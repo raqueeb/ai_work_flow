@@ -1,0 +1,117 @@
+site_name: Enterprise AI Automations
+site_author: Rakibul Hassan
+site_description: Privacy-first AI agents for real-world ISP operations using local LLMs
+
+nav:
+  - Home: index.md
+  - Overview: overview.md
+
+  # ══════════════════════════════════════════════════════
+  # GETTING STARTED
+  # ══════════════════════════════════════════════════════
+  - "Getting Started":
+    - "Overview": "getting-started/index.md"
+    - "Talk to LM Studio": "getting-started/talk-to-llm.md"
+    - "বাংলা - শুরু করুন": "bangla/getting-started/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # ISP CLASSIFIER
+  # ══════════════════════════════════════════════════════
+  - "ISP Classifier":
+    - "Overview": "isp-classifier/index.md"
+    - "Baseline Classifier": "isp-classifier/baseline.md"
+    - "LLM Classifier": "isp-classifier/llm-classifier.md"
+    - "Classifier Comparison": "isp-classifier/comparison.md"
+    - "বাংলা - ISP Classifier": "bangla/isp-classifier/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # ISP REASONING
+  # ══════════════════════════════════════════════════════
+  - "ISP Reasoning":
+    - "Overview": "isp-classifier-reasoning/index.md"
+    - "AI Reasoning": "isp-classifier-reasoning/reasoning.md"
+    - "বাংলা - ISP Reasoning": "bangla/isp-classifier-reasoning/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # QWEN + RAG
+  # ══════════════════════════════════════════════════════
+  - "Qwen + RAG":
+    - "Overview": "qwen-rag/index.md"
+    - "Qwen RAG Demo": "qwen-rag/qwen-rag-demo.md"
+    - "Simple RAG": "qwen-rag/simple-rag.md"
+    - "Vector Storage": "qwen-rag/vector-storage.md"
+    - "বাংলা - Qwen RAG": "bangla/qwen-rag/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # GEMMA E4B
+  # ══════════════════════════════════════════════════════
+  - "Gemma E4B":
+    - "Overview": "gemma-e4b/index.md"
+    - "Standard Apps": "gemma-e4b/standard-apps.md"
+    - "SLM Apps": "gemma-e4b/slm-apps.md"
+    - "বাংলা - Gemma E4B": "bangla/gemma-e4b/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # HR ASSISTANT
+  # ══════════════════════════════════════════════════════
+  - "HR Assistant":
+    - "Overview": "hr-assistant/index.md"
+    - "HR Manager": "hr-assistant/hr-manager.md"
+    - "HR Assistant": "hr-assistant/hr-assistant.md"
+    - "Sales Funnel": "hr-assistant/sales-funnel.md"
+    - "বাংলা - HR Assistant": "bangla/hr-assistant/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # SLA SYSTEM
+  # ══════════════════════════════════════════════════════
+  - "SLA System":
+    - "Overview": "sla-system/index.md"
+    - "SLA Classifier": "sla-system/classifier.md"
+    - "ERP Approval": "sla-system/erp-approval.md"
+    - "বাংলা - SLA System": "bangla/sla-system/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # SMART GIFT AI
+  # ══════════════════════════════════════════════════════
+  - "Smart Gift AI":
+    - "Overview": "smart-gift/index.md"
+    - "Admin Panel": "smart-gift/admin.md"
+    - "বাংলা - Smart Gift": "bangla/smart-gift/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # LLM DEMOS
+  # ══════════════════════════════════════════════════════
+  - "LLM Demos":
+    - "Overview": "llm-demos/index.md"
+    - "LM Demos": "llm-demos/lm-demos.md"
+    - "Hierarchy Demo": "llm-demos/hierarchy.md"
+    - "Mini Quick Demo": "llm-demos/mini-quick.md"
+    - "Stress Test": "llm-demos/stress-test.md"
+    - "বাংলা - LLM Demos": "bangla/llm-demos/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # ENTERPRISE APPS
+  # ══════════════════════════════════════════════════════
+  - "Enterprise Apps":
+    - "Overview": "enterprise-apps/index.md"
+    - "Model Use Class": "enterprise-apps/model-use.md"
+    - "বাংলা - Enterprise Apps": "bangla/enterprise-apps/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # MLOps
+  # ══════════════════════════════════════════════════════
+  - "MLOps":
+    - "Overview": "mlops/index.md"
+    - "Churn Prediction": "mlops/churn-prediction.md"
+    - "Model Registry": "mlops/model-registry.md"
+    - "Monitoring": "mlops/monitoring.md"
+    - "A/B Testing": "mlops/ab-testing.md"
+    - "Retraining": "mlops/retraining.md"
+    - "বাংলা - MLOps": "bangla/mlops/index.md"
+
+  # ══════════════════════════════════════════════════════
+  # REFERENCE
+  # ══════════════════════════════════════════════════════
+  - "Reference":
+    - "Why Reasoning Matters": "reasoning-importance.md"
+    - "বাংলা - রেফারেন্স": "bangla/reference/index.md"

@@ -1,0 +1,10 @@
+{
+  "models": {},
+  "deployment_history": [],
+  "last_updated": "2025-01-15T00:00:00",
+  "metadata": {
+    "author": "Rakibul Hassan",
+    "company": "Link3 Technologies",
+    "purpose": "Model registry configuration for ISP churn prediction"
+  }
+}
